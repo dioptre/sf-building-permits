@@ -8,7 +8,7 @@ import { easeLinear } from "d3-ease";
 import { geoMercator, geoPath } from "d3-geo";
 import neighborhoodsData from "../data/sf-neighborhoods.json";
 import c3 from "c3";
-
+import input_data from "../data/Permits_Completed_By_Year_Zip-2.json";
 
 const d3 = {
   scaleLinear,
@@ -27,6 +27,18 @@ const d3 = {
 var width = 600,
   height = 600;
 
+var years = [2017, 2016, 2015, 2014, 2013, 2012, 2011, 2010];
+var permitTypes = [
+  "total",
+  "additions alterations or repairs",
+  "demolitions",
+  "grade or quarry or fill or excavate",
+  "new construction",
+  "new construction wood frame",
+  "otc alterations permit",
+  "sign - erect",
+  "wall or painted sign"
+];
 var svg = d3
   .select("#map")
   .append("svg")
@@ -59,8 +71,7 @@ var transl = [
 projection.scale(scale).translate(transl);
 
 
-
-svg
+var neighborhoods = svg
   .selectAll("path")
   .data(neighborhoodsData.features)
   .enter()
@@ -177,3 +188,64 @@ let testData3 = d3.csv('../data/average_issue_creation.csv').then((data) => {
       }
   });
 });
+
+
+d3.selectAll("path").each(function(d, i) {
+  d3.select(this).style("data-asdf", d.id);
+});
+
+function redraw(year, permit_type) {
+  // Add year buttons
+  var yearButtons = d3
+    .select(".year-selector")
+    .selectAll("button")
+    .data(years);
+
+  yearButtons
+    .enter()
+    .append("button")
+    .attr("data-year", d => d)
+    .text(d => d)
+    .attr("class", d => d == year && "selected")
+    .on("click", function(d) {
+      redraw(d, permit_type);
+    });
+
+  var propertyTypeButtons = d3
+    .select(".permit-type-selector")
+    .selectAll("button")
+    .data(permitTypes);
+
+  propertyTypeButtons
+    .enter()
+    .append("button")
+    .attr("data-prop-type", d => d)
+    .text(d => d)
+    .attr("class", d => d == permit_type && "selected")
+    .on("click", function(d) {
+      redraw(year, d);
+    });
+
+  // Normalization
+  var permit_values = []; // for every given permit type
+  for (var zipcode in input_data[year]) {
+    permit_values.push(input_data[year][zipcode][permit_type]);
+  }
+  var max_permits = Math.max.apply(null, permit_values);
+  var min_permits = Math.min.apply(null, permit_values);
+  // .reduce((a, b) => a + b, 0);
+
+  // Filter input by year first
+  var aggregated = {};
+  for (var zipcode in input_data[year]) {
+    aggregated[zipcode] =
+      (input_data[year][zipcode][permit_type] - min_permits) / max_permits; //normalization
+  }
+
+  d3.selectAll("path").each(function(d, i) {
+    var new_color = aggregated[d.id];
+    console.log(new_color);
+    d3.select(this).style("fill", `rgba(255,91,72,${new_color})`);
+  });
+}
+redraw("2017", "total");
