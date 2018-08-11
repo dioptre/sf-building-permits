@@ -74,6 +74,13 @@
       padding-left: 20px;
       opacity: .5;
     }
+
+    h3.title {
+      position: absolute;
+      margin-left: 50px;
+      text-transform: uppercase;
+      font-size: 21px;
+    }
   </style>
 </head>
 
@@ -82,7 +89,12 @@
     <h1>SF Building Permit Dashboard</h1>
   </header>
   <section class="container">
+
     <div class="chart-wrapper">
+      <h3 class="title">
+        <span class="current-year"></span> -
+        <span class="current-permit-type"></span>
+      </h3>
       <div id="map"></div>
       <div class="year-selector">
         <h2>Year</h2>
