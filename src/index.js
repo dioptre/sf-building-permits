@@ -7,6 +7,8 @@ import { nest } from "d3-collection";
 import { easeLinear } from "d3-ease";
 import { geoMercator, geoPath } from "d3-geo";
 import neighborhoodsData from "../data/sf-neighborhoods.json";
+import c3 from "c3";
+
 
 const d3 = {
   scaleLinear,
@@ -62,3 +64,16 @@ svg
   })
   .style("fill", "#FB5B1F")
   .style("stroke", "#ffffff");
+
+
+
+//Chart
+var chart = c3.generate({
+  bindto: '#chart',
+  data: {
+    columns: [
+      ['data1', 30, 200, 100, 400, 150, 250],
+      ['data2', 50, 20, 10, 40, 15, 25]
+    ]
+  }
+});
