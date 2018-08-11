@@ -66,14 +66,79 @@ svg
   .style("stroke", "#ffffff");
 
 
+//First step is to use d3 to parse the csv they give us and then 
+//Pass it to C3 to generate the right plot. 
+//We need to separate the first value of each row and put it into 
+//It's own array to act as the time series x column
 
-//Chart
-var chart = c3.generate({
-  bindto: '#chart',
-  data: {
-    columns: [
-      ['data1', 30, 200, 100, 400, 150, 250],
-      ['data2', 50, 20, 10, 40, 15, 25]
-    ]
-  }
+//Are we splitting new construction and new construction wood
+
+//Do we have the data fields at the top
+
+let testData3 = d3.csv('../data/average_issue_creation.csv').then((data) => {
+  console.log(data);
+
+  //Get the time series into it's own array, separate by new construction or not
+  let timeSeries = ['x'];
+
+  let monthly = ['Monthly'];
+  let quarterly = ['Moving Avg Quarterly'];
+  let yearly = ['Moving Avg Yearly'];
+  let fiveyearly = ['Moving Avg 5 Year'];
+
+  let monthlyWF = ['Monthly WF'];
+  let quarterlyWF = ['Moving Avg Quarterly WF'];
+  let yearlyWF = ['Moving Avg Yearly WF'];
+  let fiveyearlyWF = ['Moving Avg 5 Year WF'];
+
+  data.forEach((row) => {
+    timeSeries.push(row['Date']);
+    if(row['Permit Type Definition'] === 'new construction') {
+      monthly.push(row.delta_monthly);
+      quarterly.push(row.delta_quarterly);
+      yearly.push(row.delta_yearly);
+      fiveyearly.push(row.delta_fiveyearly);
+    } else if(row['Permit Type Definition'] === 'new construction wood frame') {
+      monthlyWF.push(row.delta_monthly);
+      quarterlyWF.push(row.delta_quarterly);
+      yearlyWF.push(row.delta_yearly);
+      fiveyearlyWF.push(row.delta_fiveyearly);
+    }
+  })
+
+  // timeSeries = [... new Set(timeSeries)];
+
+  //Chart
+  var chart = c3.generate({
+    bindto: '#chart',
+    data: {
+      x: 'x',
+      // xFormat: '%m/%d/%Y', // 'xFormat' can be used as custom format of 'x'
+      columns: [
+        timeSeries,
+        monthly,
+        quarterly,
+        yearly,
+        fiveyearly,
+        monthlyWF,
+        quarterlyWF,
+        yearlyWF,
+        fiveyearlyWF
+      ]
+    },
+    axis: {
+        x: {
+          type: 'timeseries',
+          tick: {
+              format: '%Y-%m'
+          }
+        },
+        y: {
+          label: {
+            text: 'Avg Days from Filing to Issue',
+            position: 'outer-middle'
+          }
+        }
+      }
+  });
 });
