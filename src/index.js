@@ -1,6 +1,6 @@
 import { scaleLinear } from "d3-scale";
 import { line } from "d3-shape";
-import { select, selectAll } from "d3-selection";
+import { select, selectAll, event } from "d3-selection";
 import { transition } from "d3-transition";
 import { csv } from "d3-fetch";
 import { nest } from "d3-collection";
@@ -20,7 +20,8 @@ const d3 = {
   nest,
   easeLinear,
   geoMercator,
-  geoPath
+  geoPath,
+  get event() { return event; },
 };
 
 var width = 600,
@@ -31,6 +32,13 @@ var svg = d3
   .append("svg")
   .attr("width", width)
   .attr("height", height);
+
+  // Define 'div' for tooltips
+var div = d3.select("body")
+.append("div")  // declare the tooltip div 
+.attr("class", "mdl-tooltip mdl-tooltip--fancy")              // apply the 'tooltip' class
+.style("position", "absolute")
+.style("opacity", 0);                  // set the opacity to nil
 
 var projection = d3
   .geoMercator()
@@ -50,6 +58,8 @@ var transl = [
 ];
 projection.scale(scale).translate(transl);
 
+
+
 svg
   .selectAll("path")
   .data(neighborhoodsData.features)
@@ -63,8 +73,33 @@ svg
     return d.properties.name;
   })
   .style("fill", "#FB5B1F")
-  .style("stroke", "#ffffff");
-
+  .style("stroke", "#ffffff")
+  .on('mouseover', function(d){
+    var nodeSelection = d3.select(this).style("opacity" , 0.2);
+    div.transition()
+      .duration(200)
+      .style("opacity", .9);
+    div.html(
+      '<p style="color:white;padding:7px;">' + // The first <a> tag
+      d.properties.id +
+      "</p>")
+      .style("left", (d3.event.pageX + 30) + "px")
+      .style("top", (d3.event.pageY + 30) + "px");
+  })
+  .on('mousemove', function(d){
+    var nodeSelection = d3.select(this).style("opacity" , 0.2);
+    div.transition()
+      .duration(1)
+      .style("opacity", .9)
+      .style("left", (d3.event.pageX + 30) + "px")
+      .style("top", (d3.event.pageY + 30) + "px");
+  })
+  .on('mouseout', function(d){
+    var nodeSelection = d3.select(this).style("opacity" , 1);
+    div.transition()
+    .duration(500)
+    .style("opacity", 0);
+  })
 
 //First step is to use d3 to parse the csv they give us and then 
 //Pass it to C3 to generate the right plot. 
