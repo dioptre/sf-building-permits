@@ -83,34 +83,38 @@ var neighborhoods = svg
   .attr("data-name", function(d) {
     return d.properties.name;
   })
+  .attr("data-count", function(d) {
+    return d.properties.count;
+  })
   .style("fill", "#FB5B1F")
   .style("stroke", "#aaaaaa")
-  .on('mouseover', function(d){
-    var nodeSelection = d3.select(this).style("opacity" , 0.2);
-    div.transition()
-      .duration(200)
-      .style("opacity", .9);
-    div.html(
-      '<p style="color:white;padding:7px;">' + // The first <a> tag
-      d.properties.id +
-      "</p>")
-      .style("left", (d3.event.pageX + 30) + "px")
-      .style("top", (d3.event.pageY + 30) + "px");
-  })
-  .on('mousemove', function(d){
-    var nodeSelection = d3.select(this).style("opacity" , 0.2);
-    div.transition()
-      .duration(1)
-      .style("opacity", .9)
-      .style("left", (d3.event.pageX + 30) + "px")
-      .style("top", (d3.event.pageY + 30) + "px");
-  })
-  .on('mouseout', function(d){
-    var nodeSelection = d3.select(this).style("opacity" , 1);
-    div.transition()
-    .duration(500)
-    .style("opacity", 0);
-  })
+  // .on('mouseover', function(d){
+  //   //console.log(d.properties)
+  //   var nodeSelection = d3.select(this).style("opacity" , 0.2);
+  //   div.transition()
+  //     .duration(200)
+  //     .style("opacity", .9);
+  //   div.html(
+  //     '<p style="color:white;padding:7px;">' + // The first <a> tag
+  //     d.properties.id + d.properties.count +
+  //     "</p>")
+  //     .style("left", (d3.event.pageX + 30) + "px")
+  //     .style("top", (d3.event.pageY + 30) + "px");
+  // })
+  // .on('mousemove', function(d){
+  //   var nodeSelection = d3.select(this).style("opacity" , 0.2);
+  //   div.transition()
+  //     .duration(1)
+  //     .style("opacity", .9)
+  //     .style("left", (d3.event.pageX + 30) + "px")
+  //     .style("top", (d3.event.pageY + 30) + "px");
+  // })
+  // .on('mouseout', function(d){
+  //   var nodeSelection = d3.select(this).style("opacity" , 1);
+  //   div.transition()
+  //   .duration(500)
+  //   .style("opacity", 0);
+  // })
 
 //First step is to use d3 to parse the csv they give us and then 
 //Pass it to C3 to generate the right plot. 
@@ -121,8 +125,8 @@ var neighborhoods = svg
 
 //Do we have the data fields at the top
 
-let testData3 = d3.csv('../data/average_issue_creation.csv').then((data) => {
-  console.log(data);
+let testData3 = d3.csv('./average_issue_creation.csv').then((data) => {
+  //console.log(data);
 
   //Get the time series into it's own array, separate by new construction or not
   let timeSeries = ['x'];
@@ -212,8 +216,11 @@ function redraw(year, permit_type) {
 
   d3.selectAll("path").each(function(d, i) {
     var new_color = aggregated[d.id];
-    console.log(new_color);
-    d3.select(this).style("fill", `rgba(255,91,72,${new_color})`);
+    //console.log(new_color);
+    d3.select(this)
+      .style("fill", `rgba(255,91,72,${new_color})`)
+    
+    //add permits
   });
   d3.select(".current-year").text(year);
   d3.select(".current-permit-type").text(permit_type);
