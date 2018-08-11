@@ -2,6 +2,8 @@
 
 Data Exploration of SF Building Permits
 
+Example at https://inspiring-lumiere-66f76d.netlify.com/
+
 ## Installation
 
 Install the dependencies:
