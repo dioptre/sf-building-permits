@@ -58,6 +58,8 @@ var transl = [
 ];
 projection.scale(scale).translate(transl);
 
+
+
 svg
   .selectAll("path")
   .data(neighborhoodsData.features)
@@ -74,7 +76,6 @@ svg
   .style("stroke", "#ffffff")
   .on('mouseover', function(d){
     var nodeSelection = d3.select(this).style("opacity" , 0.2);
-    console.log(d.properties)
     div.transition()
       .duration(200)
       .style("opacity", .9);
