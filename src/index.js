@@ -141,7 +141,7 @@ let testData3 = d3.csv('../data/average_issue_creation.csv').then((data) => {
     }
   })
 
-  // timeSeries = [... new Set(timeSeries)];
+  timeSeries = [... new Set(timeSeries)];
 
   //Chart
   var chart = c3.generate({
@@ -159,7 +159,7 @@ let testData3 = d3.csv('../data/average_issue_creation.csv').then((data) => {
         quarterlyWF,
         yearlyWF,
         fiveyearlyWF
-      ]
+      ],
     },
     axis: {
         x: {
