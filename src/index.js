@@ -84,7 +84,7 @@ var neighborhoods = svg
     return d.properties.name;
   })
   .style("fill", "#FB5B1F")
-  .style("stroke", "#ffffff")
+  .style("stroke", "#aaaaaa")
   .on('mouseover', function(d){
     var nodeSelection = d3.select(this).style("opacity" , 0.2);
     div.transition()
@@ -189,43 +189,11 @@ let testData3 = d3.csv('../data/average_issue_creation.csv').then((data) => {
   });
 });
 
-
 d3.selectAll("path").each(function(d, i) {
   d3.select(this).style("data-asdf", d.id);
 });
 
 function redraw(year, permit_type) {
-  // Add year buttons
-  var yearButtons = d3
-    .select(".year-selector")
-    .selectAll("button")
-    .data(years);
-
-  yearButtons
-    .enter()
-    .append("button")
-    .attr("data-year", d => d)
-    .text(d => d)
-    .attr("class", d => d == year && "selected")
-    .on("click", function(d) {
-      redraw(d, permit_type);
-    });
-
-  var propertyTypeButtons = d3
-    .select(".permit-type-selector")
-    .selectAll("button")
-    .data(permitTypes);
-
-  propertyTypeButtons
-    .enter()
-    .append("button")
-    .attr("data-prop-type", d => d)
-    .text(d => d)
-    .attr("class", d => d == permit_type && "selected")
-    .on("click", function(d) {
-      redraw(year, d);
-    });
-
   // Normalization
   var permit_values = []; // for every given permit type
   for (var zipcode in input_data[year]) {
@@ -247,5 +215,45 @@ function redraw(year, permit_type) {
     console.log(new_color);
     d3.select(this).style("fill", `rgba(255,91,72,${new_color})`);
   });
+  d3.select(".current-year").text(year);
+  d3.select(".current-permit-type").text(permit_type);
 }
-redraw("2017", "total");
+let currentPermitType = "total";
+let currentYear = "2017";
+
+redraw(currentYear, currentPermitType);
+
+// Add year buttons
+var yearButtons = d3
+  .select(".year-selector")
+  .selectAll("button")
+  .data(years);
+
+yearButtons
+  .enter()
+  .append("button")
+  .attr("data-year", d => d)
+  .text(d => d)
+  .classed("my-selector", true)
+  // .attr("class", d => d == year && "selected")
+  .on("click", function(d) {
+    currentYear = d;
+    redraw(d, currentPermitType);
+  });
+// yearButtons.exit().attr("class", d => d == year && "selected");
+
+var propertyTypeButtons = d3
+  .select(".permit-type-selector")
+  .selectAll("button")
+  .data(permitTypes);
+
+propertyTypeButtons
+  .enter()
+  .append("button")
+  .attr("data-prop-type", d => d)
+  .text(d => d)
+  // .attr("class", d => d == permit_type && "selected")
+  .on("click", function(d) {
+    currentPermitType = d;
+    redraw(currentYear, d);
+  });
