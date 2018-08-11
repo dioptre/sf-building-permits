@@ -26,6 +26,104 @@
       padding-left: 20px;
       opacity: .5;
     }
+
+
+
+    /*Tooltip*/
+    .mdl-tooltip--fancy {
+    overflow: hidden;
+    background-color: transparent;
+  }
+  .mdl-tooltip--fancy:before {
+    content: '';
+    background-color: rgba(97, 97, 97, 0.9);
+    border-radius: 256px;
+    height: 256px;
+    left: 50%;
+    margin-left: -128px;
+    margin-top: -128px;
+    top: 0;
+    position: absolute;
+    -webkit-transform: scale(1);
+            transform: scale(1);
+    width: 256px;
+    -webkit-animation: mdl-tooltip--fancy-hide 0.75s linear;
+            animation: mdl-tooltip--fancy-hide 0.75s linear;
+    z-index: -1;
+  }
+  .mdl-tooltip--fancy.mdl-tooltip--large:before {
+    -webkit-animation-duration: 0.375s;
+            animation-duration: 0.375s;
+  }
+  .mdl-tooltip--fancy .mdl-tooltip__content {
+    position: relative;
+  }
+  .mdl-tooltip--fancy.is-active:before {
+    -webkit-animation: mdl-tooltip--fancy-show 0.75s linear;
+            animation: mdl-tooltip--fancy-show 0.75s linear;
+  }
+  .mdl-tooltip--fancy.is-active.mdl-tooltip--large:before {
+    -webkit-animation-duration: 0.375s;
+            animation-duration: 0.375s;
+  }
+  
+  @-webkit-keyframes mdl-tooltip--fancy-show {
+    0% {
+      opacity: 0;
+      -webkit-transform: scale(0);
+              transform: scale(0);
+    }
+    50% {
+      opacity: 1;
+    }
+    to {
+      opacity: 1;
+      -webkit-transform: scale(1);
+              transform: scale(1);
+    }
+  }
+  
+  @keyframes mdl-tooltip--fancy-show {
+    0% {
+      opacity: 0;
+      -webkit-transform: scale(0);
+              transform: scale(0);
+    }
+    50% {
+      opacity: 1;
+    }
+    to {
+      opacity: 1;
+      -webkit-transform: scale(1);
+              transform: scale(1);
+    }
+  }
+  @-webkit-keyframes mdl-tooltip--fancy-hide {
+    0% {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+  @keyframes mdl-tooltip--fancy-hide {
+    0% {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+  .mdl-layout__content {
+    padding: 50px;
+  }
+  
+  .align-center {
+    text-align: center;
+  }
+  
+
+
   </style>
 </head>
 
